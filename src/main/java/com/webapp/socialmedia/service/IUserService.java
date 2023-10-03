@@ -10,8 +10,4 @@ public interface IUserService {
     List<User> findAll();
 
     <S extends User> S save(S entity);
-
-    Optional<User> findById(String id);
-
-    boolean existsById(String id);
 }

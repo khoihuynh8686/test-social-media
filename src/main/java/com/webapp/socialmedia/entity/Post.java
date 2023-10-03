@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.util.UUID;
+import java.util.Date;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -16,12 +18,33 @@ import java.util.UUID;
 @Table(name = "_post")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @UuidGenerator
     private String id;
+
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User userId;
+
     @Column(columnDefinition = "text")
     private String caption;
-    private Long mediaId;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PostType type;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PostMode mode;
+
+    @ManyToMany
+    Set<Tag> tags;
+
+    private Date createdAt;
+    @PrePersist
+    private void createdAt() {
+        this.createdAt = new Date();
+    }
 }
+
+
+
